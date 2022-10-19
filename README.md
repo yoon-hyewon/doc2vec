@@ -1,38 +1,23 @@
-The repository contains some python scripts for training and inferring test document vectors using paragraph vectors or doc2vec.
+---
+description: 2022/10/10
+---
 
-Requirements
-============
-* Python2: Pre-trained models and scripts all support Python2 only.
-* Gensim: Best to use my [forked version](https://github.com/jhlau/gensim) of gensim; the latest gensim has changed its Doc2Vec methods a little and so would not load the pre-trained models.
+# Doc2vec 코드 분석
 
-Pre-Trained Doc2Vec Models
-==========================
-* [English Wikipedia DBOW (1.4GB)](https://cloudstor.aarnet.edu.au/plus/s/hpfhUC72NnKDxXw)
-* [Associated Press News DBOW (0.6GB)](https://cloudstor.aarnet.edu.au/plus/s/rjJTPBqEueZg1xS)
+**Python 구현 부**
 
-Pre-Trained Word2Vec Models
-===========================
-For reproducibility we also released the pre-trained word2vec skip-gram models on Wikipedia and AP News:
-* [English Wikipedia Skip-Gram (1.4GB)](https://cloudstor.aarnet.edu.au/plus/s/Ss4E5by3Ukj0JuN)
-* [Associated Press News Skip-gram (0.6GB)](https://cloudstor.aarnet.edu.au/plus/s/IfElyGrGbXNfeBh)
+\_do\_train\_job() 함수에서 훈련 방법 3가지 중에서 설정해둔 훈련 방법으로 훈련 진행
 
-Directory Structure and Files
-=============================
-* train_model.py: example python script to train some toy data
-* infer_test.py: example python script to infer test document vectors using trained model
-* toy_data: directory containing some toy train/test documents and pre-trained word embeddings
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>Doc2vec 학습 코드 -  python</p></figcaption></figure>
 
-Model Hyper-Parameter Explanation
-=================================
-* __sample__: this is the sub-sampling threshold to downsample frequent words; 10e-5 is usually good for DBOW, and 10e-6 for DMPV
-* __hs__: 1 turns on hierarchical sampling; this is rarely turned on as negative sampling is in general better
-* __dm__: 0 = DBOW; 1 = DMPV
-* __negative__: number of negative samples; 5 is a good value
-* __dbow_words__: 1 turns on updating of word embeddings. In DBOW, word embeddings are technically not learnt (only document embeddings are learnt). To learn word vectors, DBOW runs a step of skip-gram before the DBOW step to update the word embeddings. With dbow_words turned off, this means DBOW will randomly initialise word embeddings and keep them randomly initialised. This is rather bad in practice (as the model does not see relationships between words in the embedding space), so it should be turned on
-* __dm_concat__: 1 = concatenate input word vectors for DMPV; 0 = sum/average input word vectors. This setting is only used for DMPV since DBOW has only one input word
-* __dm_mean__: 1 = average input word vectors; 0 = sum input word vectors. Again, this setting is only used for DMPV. The original paragraph vector paper concatenates input word vectors for DMPV, and that's the setting we used in our paper
-* __iter__: number of iterations/epochs to train the model
+**Cython 구현부**
 
-Publications
-------------
-* Jey Han Lau and Timothy Baldwin (2016). [An Empirical Evaluation of doc2vec with Practical Insights into Document Embedding Generation](https://arxiv.org/abs/1607.05368). In Proceedings of the 1st Workshop on Representation Learning for NLP, 2016.
+doc2vec\_inner.pyx 파일 中 PV-DM(Sum or Average) 훈련 함수 train\_document\_dm() 구현 Part.
+
+1\) 객체 가져오기 및 초기 설정
+
+<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+
+2\) Dm 모델 구현 과정 (Cython)
+
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
