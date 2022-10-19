@@ -20,7 +20,7 @@ model = g.Doc2Vec(docs, vector_size=vectorsize, window_\_size=window\_size, min\
 6. Doc2vec 클래스에서 \_do\_train\_job() 함수를 오버라이딩&#x20;
 7. \_do\_train\_job() 함수에서 dbow, pvdm (sum or average), pvdm (concat) 중에 설정해둔 훈련 방법으로 훈련 진행 (doc2vec\_inner.cpp, doc2vec\_iner.pyx, doc2vec\_inner.pxd를 통한 내부 함수 실행) \*cpp = 함수 구현, pyx = 파이썬 문법을 기반으로 C/C++ 루틴 호출을 위한 cython언어(cython to c/c++), pxd = c/c++ 헤더와 동일한 cython 스크립트
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
 
